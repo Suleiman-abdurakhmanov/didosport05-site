@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /instagram/
+Disallow: /feed-data.json
+Disallow: /categories.json
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# AI bots
+User-agent: GPTBot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Sitemap
+Sitemap: https://www.didosport05.ru/sitemap.xml
+Sitemap: https://www.didosport05.ru/sitemap-ru.xml
+Sitemap: https://www.didosport05.ru/sitemap-en.xml
