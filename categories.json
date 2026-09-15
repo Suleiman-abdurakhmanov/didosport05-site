@@ -1,0 +1,65 @@
+{
+  "wrestling": {
+    "key": "wrestling",
+    "ru": "Вольная борьба",
+    "en": "Freestyle Wrestling",
+    "desc_ru": "Основа ДИДО СПОРТ. Команда, турниры ДИДОСПОРТ ВРЕСТЛИНГ, Горная Борцовская Лига.",
+    "desc_en": "The heart of DIDO SPORT. The team, the DIDO WRESTLING series, the Mountain Wrestling League.",
+    "cover": "instagram/feed/3963611940679775614_6801557018-10.jpg",
+    "order": 1
+  },
+  "mma": {
+    "key": "mma",
+    "ru": "MMA · Free Fighting",
+    "en": "MMA · Free Fighting",
+    "desc_ru": "Чемпионы и призёры чемпионатов России по MMA-FREE FIGHTING. Смешанные единоборства и грэпплинг.",
+    "desc_en": "Champions and prize-winners of Russian MMA-FREE FIGHTING championships. Mixed martial arts and grappling.",
+    "cover": "instagram/feed/DYz5X4AtQzx-69.jpg",
+    "order": 2
+  },
+  "grappling": {
+    "key": "grappling",
+    "ru": "Грэпплинг",
+    "en": "Grappling",
+    "desc_ru": "Первенства Европы, чемпионаты России, джиу-джитсу и борьба в партере.",
+    "desc_en": "European championships, Russian cups, jiu-jitsu and ground fighting.",
+    "cover": "instagram/feed/DagMKi7tYko-48.jpg",
+    "order": 3
+  },
+  "muay_thai": {
+    "key": "muay_thai",
+    "ru": "Муай-тай",
+    "en": "Muay Thai",
+    "desc_ru": "Тайский бокс — для тех, кто борется стойко и в характере.",
+    "desc_en": "Thai boxing — for those who fight with stamina and character.",
+    "cover": "instagram/feed/3905791681327668761_6801557018-67.jpg",
+    "order": 4
+  },
+  "volleyball": {
+    "key": "volleyball",
+    "ru": "Волейбол",
+    "en": "Volleyball",
+    "desc_ru": "Командный вид спорта — для тех, кто борется вместе, а не по одному. Сезонные турниры в районах.",
+    "desc_en": "Team sport — for those who fight together, not alone. Seasonal district tournaments.",
+    "cover": "instagram/feed/3953462709813738089_6801557018-20.jpg",
+    "order": 5
+  },
+  "football": {
+    "key": "football",
+    "ru": "Футбол",
+    "en": "Football",
+    "desc_ru": "Дидойская Футбольная Лига — турниры для команд из района и землячеств.",
+    "desc_en": "The Didoy Football League — tournaments for teams from the district and diaspora sides.",
+    "cover": "instagram/feed/3953462709813738089_6801557018-20.jpg",
+    "order": 6
+  },
+  "community": {
+    "key": "community",
+    "ru": "Сообщество",
+    "en": "Community",
+    "desc_ru": "Спортивные праздники, гуманитарные сборы, памятные даты, приветствия землякам.",
+    "desc_en": "Sports festivals, humanitarian drives, anniversaries, greetings to fellow villagers.",
+    "cover": "instagram/feed/3936823339145143716_6801557018-35.jpg",
+    "order": 7
+  }
+}
