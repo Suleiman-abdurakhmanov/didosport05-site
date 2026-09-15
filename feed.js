@@ -46,7 +46,7 @@
   };
 
   const TG_HANDLE = 'didosport05';
-  const SITE_URL = 'https://didosport05.p.spru.io/';
+  const SITE_URL = 'https://www.didosport05.ru/';
 
   function tgCommentUrl(post) {
     const lang = pickLang();
