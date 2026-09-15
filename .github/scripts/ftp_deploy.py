@@ -57,11 +57,11 @@ def walk_remote(ftp, path="/"):
             yield full.lstrip("/")
 
 def ensure_dir(ftp, path):
-    """Create dir recursively, ignore 'already exists'."""
+    """Create dir recursively (relative to cwd), ignore 'already exists'."""
     parts = [p for p in path.split("/") if p]
     cur = ""
     for p in parts:
-        cur += "/" + p
+        cur += ("/" if cur else "") + p
         try:
             ftp.mkd(cur)
         except error_perm as e:
@@ -71,11 +71,13 @@ def ensure_dir(ftp, path):
             raise
 
 def upload(ftp, local_path, remote_path):
-    remote_dir = "/" + remote_path.rsplit("/", 1)[0]
-    ensure_dir(ftp, remote_dir)
+    """Upload file. Paths are RELATIVE to ftp.pwd() (we cd into FTP_REMOTE_DIR up front)."""
+    if "/" in remote_path:
+        remote_dir = remote_path.rsplit("/", 1)[0]
+        ensure_dir(ftp, remote_dir)
     size = os.path.getsize(local_path)
     with open(local_path, "rb") as f:
-        ftp.storbinary(f"STOR /{remote_path}", f)
+        ftp.storbinary(f"STOR {remote_path}", f)
     print(f"  ↑ {remote_path}  ({human(size)})")
 
 def main():
@@ -107,20 +109,15 @@ def main():
             print(f"  ❌ FAILED {rel_p}: {e}", file=sys.stderr)
             raise
 
-    # 4) delete stale remote files
-    deleted = 0
+    # 4) delete stale remote files (relative to cwd)
     stale = sorted(remote_files - set(local_files))
+    deleted = 0
     for rel_p in stale:
-        # don't touch anything we explicitly skip
         first = rel_p.split("/", 1)[0]
         if first in SKIP_NAMES:
             continue
-        try:
-            ftp.delete("/" + FTP_REMOTE_DIR.rstrip("/") + "/" + rel_p)
-            print(f"  ✗ deleted {rel_p}")
+        if delete_remote(ftp, "", rel_p):
             deleted += 1
-        except Exception as e:
-            print(f"  ⚠ could not delete {rel_p}: {e}", file=sys.stderr)
 
     ftp.quit()
     print(f"\n✅ Done. uploaded={uploaded} deleted={deleted} unchanged={len(local_files)-uploaded}")
