@@ -205,7 +205,7 @@
         <span class="brand__line2" data-i18n="brand_sub">Цунтинский район · с 2017</span>
       </span>
     </a>
-    <nav class="nav" aria-label="Главная навигация">
+    <nav class="nav" aria-label="Главная навигация" id="primary-nav">
       <a href="#help" data-i18n="nav_help">Помочь</a>
       <a href="#latest" data-i18n="nav_latest">Новости</a>
       <a href="#sections" data-i18n="nav_sections">Разделы</a>
@@ -217,8 +217,31 @@
       <button type="button" class="lang-btn is-active" data-lang="ru" aria-pressed="true">RU</button>
       <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
     </div>
+    <button type="button" class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop" hidden></div>
+<aside class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <div class="mobile-nav__header">
+    <span class="mobile-nav__title">Меню</span>
+    <button type="button" class="mobile-nav__close" id="mobile-nav-close" aria-label="Закрыть">×</button>
+  </div>
+  <nav class="mobile-nav__list" aria-label="Главная навигация">
+    <a href="#help" data-i18n="nav_help">Помочь</a>
+    <a href="#latest" data-i18n="nav_latest">Новости</a>
+    <a href="#sections" data-i18n="nav_sections">Разделы</a>
+    <a href="#feed" data-i18n="nav_feed">Лента</a>
+    <a href="archive.html" data-i18n="archive_kicker">Архив</a>
+    <a href="#contact" data-i18n="nav_contact">Связаться</a>
+  </nav>
+  <div class="mobile-nav__lang" role="group" aria-label="Language">
+    <button type="button" class="lang-btn is-active" data-lang="ru" aria-pressed="true">RU</button>
+    <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</aside>
 
 <main id="main">
 
@@ -451,6 +474,7 @@
 <script src="i18n.js"></script>
 <script src="post-modal.js"></script>
 <script src="feed.js"></script>
+<script src="mobile-nav.js"></script>
 <script>
   // Remove the Spru Pages badge injected by p.spru.io/badge.js (closed shadow DOM).
   // CSS already hides it; this is a defence in depth in case CSS is overridden.

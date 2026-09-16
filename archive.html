@@ -166,22 +166,46 @@
 
 <header class="topbar">
   <div class="topbar__inner">
-    <a class="brand" href="index.html" aria-label="ДИДО СПОРТ">
-      <span class="brand__mark">DS</span>
-      <span class="brand__name">ДИДО <em>СПОРТ</em></span>
-      <span class="brand__sub" data-i18n="brand_sub">Цунтинский район · с 2017</span>
+    <a class="brand" href="index.html">
+      <span class="brand__mark">ДС</span>
+      <span class="brand__words">
+        <span class="brand__line1">ДИДО СПОРТ</span>
+        <span class="brand__sub" data-i18n="brand_sub">Цунтинский район · с 2017</span>
+      </span>
     </a>
-    <nav class="topnav" aria-label="Главное меню">
-      <a class="topnav__link" href="index.html#feed" data-i18n="nav_feed">Лента</a>
-      <a class="topnav__link" href="archive.html" data-i18n="archive_kicker">Архив</a>
-      <a class="topnav__link" href="index.html#contact" data-i18n="nav_contact">Связаться</a>
+    <nav class="nav" aria-label="Главная навигация" id="primary-nav">
+      <a href="index.html#feed" data-i18n="nav_feed">Лента</a>
+      <a href="archive.html" data-i18n="archive_kicker">Архив</a>
+      <a href="index.html#help" data-i18n="nav_help">Помочь</a>
+      <a href="index.html#contact" data-i18n="nav_contact">Связаться</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Язык">
       <button class="lang-btn is-active" type="button" data-lang="ru" aria-pressed="true">RU</button>
       <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">EN</button>
     </div>
+    <button type="button" class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop" hidden></div>
+<aside class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <div class="mobile-nav__header">
+    <span class="mobile-nav__title">Меню</span>
+    <button type="button" class="mobile-nav__close" id="mobile-nav-close" aria-label="Закрыть">×</button>
+  </div>
+  <nav class="mobile-nav__list" aria-label="Главная навигация">
+    <a href="index.html#feed" data-i18n="nav_feed">Лента</a>
+    <a href="archive.html" data-i18n="archive_kicker">Архив</a>
+    <a href="index.html#help" data-i18n="nav_help">Помочь</a>
+    <a href="index.html#contact" data-i18n="nav_contact">Связаться</a>
+  </nav>
+  <div class="mobile-nav__lang" role="group" aria-label="Язык">
+    <button type="button" class="lang-btn is-active" data-lang="ru" aria-pressed="true">RU</button>
+    <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</aside>
 
 <main id="main" class="archive-page">
   <div class="container">
@@ -229,6 +253,7 @@
 
 <script src="i18n.js"></script>
 <script src="post-modal.js"></script>
+<script src="mobile-nav.js"></script>
 <script src="archive.js"></script>
 </body>
 </html>
