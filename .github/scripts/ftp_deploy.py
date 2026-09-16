@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Atomic FTP deploy: upload new/changed files, remove stale files."""
 import os
+import socket
 import sys
-from ftplib import FTP, FTP_TLS, error_perm
+from ftplib import FTP, error_perm
+
+socket.setdefaulttimeout(300)
 
 FTP_SERVER = os.environ["FTP_SERVER"]
 FTP_USERNAME = os.environ["FTP_USERNAME"]
@@ -12,6 +15,8 @@ LOCAL_DIR = "."  # workflow runs from repo root
 
 SKIP_NAMES = {".git", ".github", ".gitignore", "node_modules", ".DS_Store"}
 SKIP_EXTS = {".pyc", ".pyo"}
+# Don't traverse these during LIST — they hold many assets and LIST is slow
+SKIP_WALK_NAMES = {"feed", "instagram"}
 
 def human(n):
     for u in ["B", "KB", "MB", "GB"]:
@@ -36,7 +41,7 @@ def walk_local(root):
             yield abs_p, rel_p
 
 def walk_remote(ftp, path="/"):
-    """Yield remote paths of all files (recursively)."""
+    """Yield remote paths of all files (recursively). Skip heavy dirs (instagram/feed)."""
     try:
         names = []
         ftp.retrlines(f"LIST {path}", names.append)
@@ -49,6 +54,9 @@ def walk_remote(ftp, path="/"):
         perms = parts[0]
         name = parts[8]
         if name in (".", ".."):
+            continue
+        # Skip heavy asset dirs to keep LIST fast
+        if name in SKIP_WALK_NAMES:
             continue
         full = f"{path.rstrip('/')}/{name}"
         if perms.startswith("d"):
@@ -83,8 +91,9 @@ def upload(ftp, local_path, remote_path):
 def main():
     print(f"Connecting to ftp://{FTP_SERVER} as {FTP_USERNAME}...")
     ftp = FTP()
-    ftp.connect(FTP_SERVER, 21, timeout=60)
+    ftp.connect(FTP_SERVER, 21, timeout=300)
     ftp.login(FTP_USERNAME, FTP_PASSWORD)
+    ftp.set_debuglevel(0)
     print(f"Logged in. Remote dir: {FTP_REMOTE_DIR}")
 
     # 1) index existing remote files
@@ -116,8 +125,13 @@ def main():
         first = rel_p.split("/", 1)[0]
         if first in SKIP_NAMES:
             continue
-        if delete_remote(ftp, "", rel_p):
+        if rel_p == "archive.html":
+            continue  # keep archive.html deploy atomic, manual if needed
+        try:
+            ftp.delete(rel_p)
             deleted += 1
+        except Exception:
+            pass  # file may not exist as a regular file
 
     ftp.quit()
     print(f"\n✅ Done. uploaded={uploaded} deleted={deleted} unchanged={len(local_files)-uploaded}")

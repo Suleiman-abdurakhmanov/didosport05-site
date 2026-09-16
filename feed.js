@@ -184,7 +184,11 @@
       body.appendChild(open);
 
       card.appendChild(body);
-      card.addEventListener('click', () => openModal(post));
+      card.addEventListener('click', () => {
+        if (typeof window.openPostModal === 'function') {
+          window.openPostModal(post, allPosts, allPosts.indexOf(post));
+        }
+      });
       root.appendChild(card);
     });
   }
@@ -247,11 +251,13 @@
       : allPosts.filter((p) => p.category === activeFilter);
 
     while (grid.firstChild) grid.removeChild(grid.firstChild);
-    filtered.forEach((p) => {
+    filtered.forEach((p, i) => {
       const card = buildCard(p);
       card.addEventListener('click', (e) => {
         e.preventDefault();
-        openModal(p);
+        if (typeof window.openPostModal === 'function') {
+          window.openPostModal(p, filtered, i);
+        }
       });
       grid.appendChild(card);
     });
@@ -361,189 +367,6 @@
     const m = h.match(/^#feed\/([a-z_]+)/);
     if (m && categories[m[1]]) return m[1];
     return 'all';
-  }
-
-  // ============ MODAL ============
-  let activeModal = null;
-  let activePost = null;
-
-  function ensureModal() {
-    if (activeModal) return activeModal;
-    const overlay = makeEl('div', 'post-modal');
-    overlay.setAttribute('aria-hidden', 'true');
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-
-    const panel = makeEl('div', 'post-modal__panel');
-    const closeBtn = makeEl('button', 'post-modal__close', '×');
-    closeBtn.type = 'button';
-    closeBtn.addEventListener('click', closeModal);
-
-    const viewer = makeEl('div', 'post-modal__viewer');
-    const track = makeEl('div', 'post-modal__track');
-    track.tabIndex = 0;
-    const prevBtn = makeEl('button', 'post-modal__nav post-modal__nav--prev', '‹');
-    prevBtn.type = 'button';
-    prevBtn.addEventListener('click', () => navigate(-1));
-    const nextBtn = makeEl('button', 'post-modal__nav post-modal__nav--next', '›');
-    nextBtn.type = 'button';
-    nextBtn.addEventListener('click', () => navigate(1));
-    const counter = makeEl('div', 'post-modal__counter', '1 / 1');
-
-    viewer.appendChild(track);
-    viewer.appendChild(prevBtn);
-    viewer.appendChild(nextBtn);
-    viewer.appendChild(counter);
-
-    const info = makeEl('div', 'post-modal__info');
-    panel.appendChild(closeBtn);
-    panel.appendChild(viewer);
-    panel.appendChild(info);
-    overlay.appendChild(panel);
-    document.body.appendChild(overlay);
-
-    track.addEventListener('scroll', () => {
-      const idx = currentIndex();
-      counter.textContent = `${idx + 1} / ${track.children.length}`;
-      prevBtn.hidden = track.children.length <= 1;
-      nextBtn.hidden = track.children.length <= 1;
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (overlay.getAttribute('aria-hidden') === 'true') return;
-      if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
-      else if (e.key === 'ArrowRight') { e.preventDefault(); navigate(1); }
-    });
-
-    activeModal = { overlay, panel, viewer, track, prevBtn, nextBtn, counter, info };
-    return activeModal;
-  }
-
-  function currentIndex() {
-    const m = activeModal;
-    if (!m) return 0;
-    const slide = m.track.querySelector('.post-modal__slide');
-    if (!slide) return 0;
-    return Math.round(m.track.scrollLeft / slide.getBoundingClientRect().width);
-  }
-  function navigate(delta) {
-    const m = activeModal;
-    if (!m) return;
-    const slide = m.track.querySelector('.post-modal__slide');
-    if (!slide) return;
-    const slideW = slide.getBoundingClientRect().width;
-    const idx = Math.max(0, Math.min(currentIndex() + delta, m.track.children.length - 1));
-    m.track.scrollTo({ left: idx * slideW, behavior: 'smooth' });
-  }
-
-  function openModal(post) {
-    const m = ensureModal();
-    activePost = post;
-    while (m.track.firstChild) m.track.removeChild(m.track.firstChild);
-    const images = (post.images && post.images.length) ? post.images : (post.image ? [post.image] : []);
-    images.forEach((src) => {
-      const slide = makeEl('div', 'post-modal__slide');
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = '';
-      img.loading = 'lazy';
-      slide.appendChild(img);
-      m.track.appendChild(slide);
-    });
-    m.prevBtn.hidden = images.length <= 1;
-    m.nextBtn.hidden = images.length <= 1;
-    m.counter.hidden = images.length <= 1;
-    m.counter.textContent = `1 / ${images.length}`;
-    m.track.scrollLeft = 0;
-
-    while (m.info.firstChild) m.info.removeChild(m.info.firstChild);
-    const meta = makeEl('div', 'post-modal__meta');
-    const tag = pickLang() === 'en' ? (post.tag_en || post.tag) : post.tag;
-    const cat = categories[post.category];
-    const catLabel = cat ? (pickLang() === 'en' ? cat.en : cat.ru) : '';
-    if (catLabel) meta.appendChild(makeEl('span', 'post-modal__cat', catLabel));
-    meta.appendChild(makeEl('span', 'post-modal__tag', tag || ''));
-    meta.appendChild(makeEl('span', 'post-modal__date', fmtDate(post.date)));
-
-    const reactions = makeEl('div', 'post-modal__reactions');
-    const likeBtn = makeEl('button', 'reaction-btn reaction-btn--like');
-    likeBtn.type = 'button';
-    likeBtn.setAttribute('aria-pressed', 'false');
-    const liked = isLiked(post.code || post.url);
-    if (liked) likeBtn.classList.add('is-on');
-    const likeIcon = makeEl('span', 'reaction-btn__icon', liked ? '❤' : '♡');
-    const likeLabel = makeEl('span', 'reaction-btn__label', t(liked ? 'liked' : 'like'));
-    likeBtn.appendChild(likeIcon);
-    likeBtn.appendChild(likeLabel);
-    likeBtn.addEventListener('click', () => {
-      const key = post.code || post.url;
-      const nowLiked = toggleLiked(key);
-      likeBtn.classList.toggle('is-on', nowLiked);
-      likeBtn.setAttribute('aria-pressed', String(nowLiked));
-      likeIcon.textContent = nowLiked ? '❤' : '♡';
-      likeLabel.textContent = t(nowLiked ? 'liked' : 'like');
-      const card = document.querySelector('.ig-card[data-post-id="' + key + '"]');
-      if (card) {
-        if (nowLiked && !card.classList.contains('ig-card--liked')) {
-          card.classList.add('ig-card--liked');
-          const heart = makeEl('span', 'ig-card__heart', '❤');
-          heart.setAttribute('aria-hidden', 'true');
-          card.appendChild(heart);
-        } else if (!nowLiked) {
-          card.classList.remove('ig-card--liked');
-          const h = card.querySelector('.ig-card__heart');
-          if (h) h.remove();
-        }
-      }
-    });
-    reactions.appendChild(likeBtn);
-
-    const tgBtn = makeEl('a', 'reaction-btn reaction-btn--tg');
-    tgBtn.href = tgCommentUrl(post);
-    tgBtn.target = '_blank';
-    tgBtn.rel = 'noopener';
-    tgBtn.innerHTML = `<span class="reaction-btn__icon">💬</span><span class="reaction-btn__label">${t('discuss_tg')}</span>`;
-    reactions.appendChild(tgBtn);
-
-    const shareBtn = makeEl('a', 'reaction-btn reaction-btn--share');
-    shareBtn.href = tgShareUrl(post);
-    shareBtn.target = '_blank';
-    shareBtn.rel = 'noopener';
-    shareBtn.innerHTML = `<span class="reaction-btn__icon">↗</span><span class="reaction-btn__label">${t('share_tg')}</span>`;
-    reactions.appendChild(shareBtn);
-
-    const hint = makeEl('p', 'post-modal__react-hint');
-    hint.textContent = t('like_hint');
-    reactions.appendChild(hint);
-
-    meta.appendChild(reactions);
-    m.info.appendChild(meta);
-
-    const cap = makeEl('p', 'post-modal__caption');
-    cap.innerHTML = linkify(post.caption || '');
-    m.info.appendChild(cap);
-
-    const attr = makeEl('p', 'post-modal__attribution');
-    attr.textContent = (pickLang() === 'en')
-      ? 'Source: DIDO SPORT community archive'
-      : 'Источник: архив сообщества ДИДО СПОРТ';
-    m.info.appendChild(attr);
-
-    m.overlay.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('post-modal-open');
-  }
-
-  function closeModal() {
-    if (!activeModal) return;
-    activeModal.overlay.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('post-modal-open');
-    setTimeout(() => {
-      if (activeModal && activeModal.overlay.getAttribute('aria-hidden') === 'true') {
-        while (activeModal.track.firstChild) activeModal.track.removeChild(activeModal.track.firstChild);
-        activePost = null;
-      }
     }, 260);
   }
 
@@ -604,9 +427,6 @@
     renderSections();
     renderFilters();
     renderFeed();
-    if (activePost && activeModal && activeModal.overlay.getAttribute('aria-hidden') === 'false') {
-      openModal(activePost);
-    }
   });
 
   // React to hash change (back/forward, manual edit)

@@ -210,6 +210,7 @@
       <a href="#latest" data-i18n="nav_latest">Новости</a>
       <a href="#sections" data-i18n="nav_sections">Разделы</a>
       <a href="#feed" data-i18n="nav_feed">Лента</a>
+      <a href="archive.html" data-i18n="archive_kicker">Архив</a>
       <a href="#contact" data-i18n="nav_contact">Связаться</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Language">
@@ -448,6 +449,24 @@
 </footer>
 
 <script src="i18n.js"></script>
+<script src="post-modal.js"></script>
 <script src="feed.js"></script>
+<script>
+  // Remove the Spru Pages badge injected by p.spru.io/badge.js (closed shadow DOM).
+  // CSS already hides it; this is a defence in depth in case CSS is overridden.
+  (function () {
+    function killBadge() {
+      var host = document.getElementById('spru-pages-badge-host');
+      if (host && host.parentNode) host.parentNode.removeChild(host);
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', killBadge);
+    } else {
+      killBadge();
+    }
+    var obs = new MutationObserver(killBadge);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  })();
+</script>
 </body>
 </html>

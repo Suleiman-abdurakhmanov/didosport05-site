@@ -1376,3 +1376,7 @@ body.post-modal-open { overflow: hidden; }
   .latest__grid { grid-template-columns: 1fr; padding: 0 18px; }
   .latest-card__title { font-size: 18px; }
 }
+
+/* hide Spru Pages badge — injected by p.spru.io/badge.js via closed shadow DOM.
+   We hide the host element so the closed shadow content never paints. */
+#spru-pages-badge-host { display: none !important; visibility: hidden !important; pointer-events: none !important; }
