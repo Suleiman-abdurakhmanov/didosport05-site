@@ -1531,6 +1531,51 @@ body.post-modal-open { overflow: hidden; }
   .kicker { font-size: 11px; }
 }
 
-/* hide Spru Pages badge — injected by p.spru.io/badge.js via closed shadow DOM.
-   We hide the host element so the closed shadow content never paints. */
-#spru-pages-badge-host { display: none !important; visibility: hidden !important; pointer-events: none !important; }
+
+/* ============================================================
+   Yandex.RTB ad slots (RSYA)
+   ============================================================ */
+.rsya-slot {
+  max-width: var(--max-w, 1180px);
+  margin: 32px auto;
+  padding: 18px 20px;
+  background: rgba(184, 101, 26, 0.04);
+  border: 1px dashed rgba(184, 101, 26, 0.25);
+  border-radius: 14px;
+  text-align: center;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.rsya-slot__label {
+  font-family: var(--font-sans, system-ui);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20, 14, 8, 0.42);
+  margin-bottom: 8px;
+}
+.rsya-slot > div[id^="yandex_rtb_"] {
+  width: 100%;
+  max-width: 728px;
+  min-height: 200px;
+}
+@media (max-width: 720px) {
+  .rsya-slot {
+    margin: 20px 12px;
+    padding: 14px 12px;
+    min-height: 180px;
+  }
+}
+@media (max-width: 480px) {
+  .rsya-slot > div[id^="yandex_rtb_"] {
+    min-height: 160px;
+  }
+}
+
+/* Hide empty slots when Yandex returns no ad (e.g. during moderation) */
+.rsya-slot:empty {
+  display: none;
+}

@@ -13,6 +13,10 @@
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <meta name="googlebot" content="index, follow">
 <meta name="yandex" content="index, follow">
+<!-- Yandex.RTB context loader (required for all ad blocks on the page) -->
+<script>window.yaContextCb=window.yaContextCb||[]</script>
+<script async src="https://yandex.ru/ads/system/context.js"></script>
+
 <meta name="language" content="Russian">
 <meta name="geo.region" content="RU-DA">
 <meta name="geo.placename" content="Цунтинский район, Республика Дагестан">
@@ -356,6 +360,20 @@
   </div>
 </section>
 
+<!-- Yandex.RTB R-A-20092000-1 — slot 1 (between latest and about) -->
+<div class="rsya-slot rsya-slot--top">
+  <span class="rsya-slot__label">Реклама</span>
+  <div id="yandex_rtb_R-A-20092000-1"></div>
+  <script>
+  window.yaContextCb.push(() => {
+    Ya.Context.AdvManager.render({
+      "blockId": "R-A-20092000-1",
+      "renderTo": "yandex_rtb_R-A-20092000-1"
+    })
+  });
+  </script>
+</div>
+
 <!-- ABOUT (compact) -->
 <section id="about" class="about about--compact">
   <div class="about__inner">
@@ -411,6 +429,20 @@
     <p data-i18n="feed_empty_sub">Новые посты появятся здесь, как только будут опубликованы.</p>
   </div>
 </section>
+
+<!-- Yandex.RTB R-A-20092000-1 — slot 2 (between feed and contact) -->
+<div class="rsya-slot rsya-slot--bottom">
+  <span class="rsya-slot__label">Реклама</span>
+  <div id="yandex_rtb_R-A-20092000-2"></div>
+  <script>
+  window.yaContextCb.push(() => {
+    Ya.Context.AdvManager.render({
+      "blockId": "R-A-20092000-1",
+      "renderTo": "yandex_rtb_R-A-20092000-2"
+    })
+  });
+  </script>
+</div>
 
 <!-- CONTACT -->
 <section id="contact" class="contact">
@@ -475,22 +507,4 @@
 <script src="post-modal.js"></script>
 <script src="feed.js"></script>
 <script src="mobile-nav.js"></script>
-<script>
-  // Remove the Spru Pages badge injected by p.spru.io/badge.js (closed shadow DOM).
-  // CSS already hides it; this is a defence in depth in case CSS is overridden.
-  (function () {
-    function killBadge() {
-      var host = document.getElementById('spru-pages-badge-host');
-      if (host && host.parentNode) host.parentNode.removeChild(host);
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', killBadge);
-    } else {
-      killBadge();
-    }
-    var obs = new MutationObserver(killBadge);
-    obs.observe(document.documentElement, { childList: true, subtree: true });
-  })();
-</script>
-</body>
 </html>
