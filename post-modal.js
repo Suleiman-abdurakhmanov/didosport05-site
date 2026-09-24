@@ -417,36 +417,23 @@
     return String(n);
   }
 
-  // -------- Video autoplay (muted, on viewport entry) --------
+  // -------- Video autoplay helper (mobile-friendly) --------
   function setupVideoAutoplay(m) {
     const videos = m.track.querySelectorAll('video');
     if (!videos.length) return;
 
     videos.forEach((v) => {
-      v.muted = true;
+      v.muted = false;
       v.playsInline = true;
-      v.loop = true;
       v.preload = 'auto';
       v.setAttribute('webkit-playsinline', 'true');
       v.style.background = '#000';
+
+      // Try gentle autoplay (muted) — will be ignored by browser if blocked, controls remain usable
+      v.muted = true;
+      const p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
     });
-
-    if (!('IntersectionObserver' in window)) return;
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        const v = e.target;
-        if (e.isIntersecting && e.intersectionRatio >= 0.5) {
-          // Try autoplay; ignore promise rejection (browser may block)
-          const p = v.play();
-          if (p && typeof p.catch === 'function') p.catch(() => {});
-        } else {
-          v.pause();
-        }
-      });
-    }, { threshold: [0, 0.5, 1] });
-
-    videos.forEach((v) => io.observe(v));
   }
 
   // -------- Share popover --------
@@ -623,10 +610,31 @@
     } else {
       images.forEach((src, i) => {
         const slide = el('div', 'post-modal__slide');
-        const isVideo = /\.(mp4|mov|webm)$/i.test(src);
+        const isVideo = /\.(mp4|mov|webm)(\?|$)/i.test(src);
         if (isVideo) {
           const v = document.createElement('video');
-          v.src = src; v.controls = true; v.playsInline = true; v.preload = 'metadata';
+          v.src = src;
+          v.controls = true;
+          v.playsInline = true;
+          v.preload = 'auto';
+          v.setAttribute('webkit-playsinline', 'true');
+          v.muted = false;
+          v.loop = false;
+          v.style.width = '100%';
+          v.style.height = '100%';
+          v.style.objectFit = 'contain';
+          v.style.cursor = 'pointer';
+
+          // Click anywhere on video to play/pause
+          v.addEventListener('click', (e) => {
+            if (v.paused) {
+              const p = v.play();
+              if (p && typeof p.catch === 'function') p.catch(() => {});
+            } else {
+              v.pause();
+            }
+          });
+
           slide.appendChild(v);
         } else {
           const img = document.createElement('img');
