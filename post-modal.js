@@ -61,7 +61,7 @@
     return e;
   }
   function escapeHtml(s) {
-    return (s || '').replace(/[&<>"']/g, (c) => ({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));
+    return (s || '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
   function linkify(text) {
     if (!text) return '';
