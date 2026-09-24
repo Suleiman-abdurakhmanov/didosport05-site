@@ -180,7 +180,7 @@
 
       // Заголовок — первая строка/предложение caption
       const caption = (p.c || '').trim();
-      const title = caption.split(/[\n\.\!]/)[0].slice(0, 80).trim() || labels.tag;
+      const title = extractTitle(caption) || labels.tag;
 
       // Изображение — кликабельное, открывает модал (НЕ перекидывает в Instagram)
       const imgWrap = el('button', { type: 'button', class: 'post-image', 'aria-label': title });
@@ -241,6 +241,7 @@
       image: p.i || '',
       images: p.i ? [p.i] : [],
       caption: p.c || '',
+      title: extractTitle(p.c),
       tag: tag,
       tag_en: tagEn,
       category: '',
@@ -262,6 +263,10 @@
     }
     // Fallback если post-modal.js не загружен — открываем оригинал в новой вкладке
     if (p.u) window.open(p.u, '_blank', 'noopener');
+  }
+
+  function extractTitle(caption) {
+    return (caption || '').trim().split(/[\n.!?]/)[0].slice(0, 80).trim();
   }
 
   function parseHash() {
