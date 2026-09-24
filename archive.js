@@ -162,6 +162,7 @@
 
     // Группируем по дню, разделяя заголовком дня
     let lastDay = null;
+    let cardIndex = 0;
     filtered.forEach((p) => {
       const day = (p.d || '').slice(0, 10);
       if (day !== lastDay) {
@@ -173,9 +174,17 @@
       }
       const card = el('article', { class: 'archive-post' });
       const imgWrap = el('a', { class: 'post-image', href: p.u, target: '_blank', rel: 'noopener' });
-      const img = el('img', { loading: 'lazy', alt: p.c || '' });
+      // First 6 cards: eager load so user sees preview instantly. Rest: lazy.
+      const loadingMode = cardIndex < 6 ? 'eager' : 'lazy';
+      cardIndex++;
+      const img = el('img', { loading: loadingMode, alt: p.c || '' });
       img.src = p.i || '';
-      img.onerror = () => { imgWrap.style.background = '#222'; img.remove(); };
+      img.onerror = () => {
+        // Replace broken image with placeholder rather than removing (keeps layout stable)
+        imgWrap.style.background = '#1a1a1a';
+        img.replaceWith(Object.assign(document.createElement('div'),
+          { className: 'post-image__fallback', textContent: '📷' }));
+      };
       imgWrap.appendChild(img);
       card.appendChild(imgWrap);
 

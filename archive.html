@@ -143,6 +143,18 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .archive-post .post-image__fallback {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #2a221a 0%, #1a1410 100%);
+    color: #b8651a;
+    font-size: 48px;
+  }
+  .archive-post .post-image__fallback::after {
+    content: '📷';
+    opacity: 0.4;
+  }
+  }
 
   .archive-empty {
     text-align: center;
