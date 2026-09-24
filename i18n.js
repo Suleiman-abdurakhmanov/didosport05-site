@@ -63,6 +63,9 @@
       ct_f_name: 'Ваше имя',
       ct_f_msg: 'Сообщение',
       ct_f_send: 'Отправить в Телеграм →',
+      ct_f_files: 'Фото и видео',
+      ct_f_drop: 'Нажмите или перетащите фото и видео',
+      ct_f_drop_meta: 'До 10 файлов · JPG, PNG, MP4 · до 50 МБ каждый',
 
       latest_kicker: 'Последние новости',
       latest_h2: 'Свежее — только что из ленты.',
@@ -165,6 +168,9 @@
       ct_f_name: 'Your name',
       ct_f_msg: 'Message',
       ct_f_send: 'Send via Telegram →',
+      ct_f_files: 'Photos & videos',
+      ct_f_drop: 'Tap or drop photos and videos here',
+      ct_f_drop_meta: 'Up to 10 files · JPG, PNG, MP4 · up to 50 MB each',
 
       latest_kicker: 'Latest news',
       latest_h2: 'Just out — the freshest from the feed.',

@@ -432,16 +432,29 @@
         или пригласить на турнир — пишите. Отвечаем лично.
       </p>
 
-      <form class="contact__form" id="contact-form" action="https://t.me/didosport" method="get" target="_blank">
+      <form class="contact__form" id="contact-form">
         <label class="contact__field">
           <span data-i18n="ct_f_name">Ваше имя</span>
           <input type="text" name="name" autocomplete="name" placeholder="Адам">
         </label>
         <label class="contact__field">
           <span data-i18n="ct_f_msg">Сообщение</span>
-          <textarea name="message" rows="3" placeholder="Здравствуйте! Хочу предложить..."></textarea>
+          <textarea name="message" rows="3" placeholder="Здравствуйте! Хочу предложить историю о спортсмене..."></textarea>
         </label>
+        <div class="contact__field">
+          <span data-i18n="ct_f_files">Фото и видео</span>
+          <label class="contact__drop" id="dropZone">
+            <input type="file" id="fileInput" multiple accept="image/*,video/*" hidden>
+            <span class="contact__drop-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            </span>
+            <span class="contact__drop-hint" data-i18n="ct_f_drop">Нажмите или перетащите фото и видео</span>
+            <span class="contact__drop-meta" data-i18n="ct_f_drop_meta">До 10 файлов · JPG, PNG, MP4 · до 50 МБ каждый</span>
+          </label>
+          <div class="contact__previews" id="previews" hidden></div>
+        </div>
         <button type="submit" class="contact__send" data-i18n="ct_f_send">Отправить в Телеграм →</button>
+        <p class="contact__hint" id="contactHint" hidden></p>
       </form>
     </div>
 
@@ -492,4 +505,5 @@
 <script src="feed.js"></script>
 <script src="mobile-nav.js"></script>
 <script src="nav-archive.js"></script>
+<script src="contact-form.js"></script>
 </html>
