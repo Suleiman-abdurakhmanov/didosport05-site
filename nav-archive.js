@@ -61,10 +61,10 @@
   }
 
   function init() {
-    const host = document.getElementById('navArchiveYears');
-    if (!host) return;
+    const hosts = document.querySelectorAll('.nav-archive__years');
+    if (!hosts.length) return;
     const years = loadSummary();
-    buildYears(years, host);
+    hosts.forEach((host) => buildYears(years, host));
   }
 
   if (document.readyState === 'loading') {

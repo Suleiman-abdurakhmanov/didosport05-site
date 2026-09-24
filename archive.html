@@ -175,10 +175,10 @@
     </a>
     <nav class="nav" aria-label="Главная навигация" id="primary-nav">
       <a href="index.html#feed" data-i18n="nav_feed">Лента</a>
-      <details class="nav-archive" id="navArchive" open>
-      <summary data-i18n="archive_kicker">Архив</summary>
-      <div class="nav-archive__years" id="navArchiveYears"></div>
-    </details>
+      <details class="nav-archive nav-archive--desktop" id="navArchiveDesktop">
+        <summary data-i18n="archive_kicker">Архив</summary>
+        <div class="nav-archive__years"></div>
+      </details>
       <a href="index.html#help" data-i18n="nav_help">Помочь</a>
       <a href="index.html#contact" data-i18n="nav_contact">Связаться</a>
     </nav>
@@ -200,9 +200,9 @@
   </div>
   <nav class="mobile-nav__list" aria-label="Главная навигация">
     <a href="index.html#feed" data-i18n="nav_feed">Лента</a>
-    <details class="nav-archive" id="navArchive" open>
+    <details class="nav-archive nav-archive--mobile" id="navArchiveMobile">
       <summary data-i18n="archive_kicker">Архив</summary>
-      <div class="nav-archive__years" id="navArchiveYears"></div>
+      <div class="nav-archive__years"></div>
     </details>
     <a href="index.html#help" data-i18n="nav_help">Помочь</a>
     <a href="index.html#contact" data-i18n="nav_contact">Связаться</a>
