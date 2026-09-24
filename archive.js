@@ -53,16 +53,23 @@
     const ym = `${year}-${String(month).padStart(2, '0')}`;
     const key = `__didoMonth${ym.replace('-', '')}`;
     if (MONTH_CACHE[ym]) return Promise.resolve(MONTH_CACHE[ym]);
+    // Accept both shapes: window.__didoMonthYYYYMM = [...] OR = { p: [...] }
+    function unwrap(v) {
+      if (!v) return [];
+      if (Array.isArray(v)) return v;
+      if (Array.isArray(v.p)) return v.p;
+      return [];
+    }
     if (window[key]) {
-      MONTH_CACHE[ym] = window[key].p || [];
+      MONTH_CACHE[ym] = unwrap(window[key]);
       return Promise.resolve(MONTH_CACHE[ym]);
     }
     return new Promise((resolve) => {
       const s = document.createElement('script');
-      s.src = `archive/feed-${ym}.js?v=2`;
+      s.src = `archive/feed-${ym}.js?v=${Date.now()}`;
       s.onload = () => {
-        const data = window[key] || { p: [] };
-        MONTH_CACHE[ym] = data.p || [];
+        const data = window[key];
+        MONTH_CACHE[ym] = unwrap(data);
         resolve(MONTH_CACHE[ym]);
       };
       s.onerror = () => {
