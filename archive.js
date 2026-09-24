@@ -235,11 +235,13 @@
   function toModalPost(p) {
     const tag = p.t || p.te || '';
     const tagEn = p.te || p.t || '';
+    // Multi-image carousel: prefer post.images array, fall back to single image
+    const imgs = Array.isArray(p.im) && p.im.length ? p.im : (p.i ? [p.i] : []);
     return {
       code: p.s || '',
       url: p.u || '',
-      image: p.i || '',
-      images: p.i ? [p.i] : [],
+      image: imgs[0] || p.i || '',
+      images: imgs,
       caption: p.c || '',
       title: extractTitle(p.c),
       tag: tag,
