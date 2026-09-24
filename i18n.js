@@ -58,7 +58,7 @@
       help_pay_alt_web: 'Сбербанк Онлайн в браузере →',
       help_copy: 'Скопировать',
       help_copy_done: 'Скопировано ✓',
-      help_hint: 'Номер карты для прямого перевода добавим позже — пока работает перевод по СБП на этот номер. После перевода можно прислать чек в Телеграм: @didosport05 — отметим ваше участие и расскажем, на что пошли средства.',
+      help_hint: 'Номер карты для прямого перевода добавим позже — пока работает перевод по СБП на этот номер. После перевода можно прислать чек в Телеграм: @didosport — отметим ваше участие и расскажем, на что пошли средства.',
 
       ct_f_name: 'Ваше имя',
       ct_f_msg: 'Сообщение',
@@ -160,7 +160,7 @@
       help_pay_alt_web: 'Sberbank Online in browser →',
       help_copy: 'Copy',
       help_copy_done: 'Copied ✓',
-      help_hint: 'A direct card number will be added later — for now transfers work via SBP to this phone number. After the transfer you can send the receipt to Telegram: @didosport05 — we will acknowledge your support and share where the funds went.',
+      help_hint: 'A direct card number will be added later — for now transfers work via SBP to this phone number. After the transfer you can send the receipt to Telegram: @didosport — we will acknowledge your support and share where the funds went.',
 
       ct_f_name: 'Your name',
       ct_f_msg: 'Message',

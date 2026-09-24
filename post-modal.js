@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const TG_HANDLE = 'didosport05';
+  const TG_HANDLE = 'didosport';
 
   const modalLabels = {
     ru: {

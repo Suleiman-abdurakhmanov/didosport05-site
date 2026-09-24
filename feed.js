@@ -45,7 +45,7 @@
     },
   };
 
-  const TG_HANDLE = 'didosport05';
+  const TG_HANDLE = 'didosport';
   const SITE_URL = 'https://www.didosport05.ru/';
 
   function tgCommentUrl(post) {
@@ -367,7 +367,6 @@
     const m = h.match(/^#feed\/([a-z_]+)/);
     if (m && categories[m[1]]) return m[1];
     return 'all';
-    }, 260);
   }
 
   // ============ TICKER + NAV BINDING ============
@@ -505,7 +504,7 @@
       const salutation = pickLang() === 'en' ? 'Hello, DIDO SPORT team!' : 'Здравствуйте, команда ДИДО СПОРТ!';
       const fromLine = name ? (pickLang() === 'en' ? `\n\nFrom: ${name}` : `\n\nОт: ${name}`) : '';
       const full = msg ? `${salutation}\n\n${msg}${fromLine}` : salutation + fromLine;
-      const url = 'https://t.me/didosport05?text=' + encodeURIComponent(full);
+      const url = 'https://t.me/didosport?text=' + encodeURIComponent(full);
       window.open(url, '_blank', 'noopener');
     });
   }
