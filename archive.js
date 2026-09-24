@@ -163,6 +163,10 @@
     // Группируем по дню, разделяя заголовком дня
     let lastDay = null;
     let cardIndex = 0;
+    const labels = lang === 'en'
+      ? { tag: 'Post', readMore: 'Read more', readLess: 'Hide', original: 'Open original on Instagram' }
+      : { tag: 'Публикация', readMore: 'Читать полностью', readLess: 'Свернуть', original: 'Открыть оригинал в Instagram' };
+
     filtered.forEach((p) => {
       const day = (p.d || '').slice(0, 10);
       if (day !== lastDay) {
@@ -173,29 +177,91 @@
         lastDay = day;
       }
       const card = el('article', { class: 'archive-post' });
-      const imgWrap = el('a', { class: 'post-image', href: p.u, target: '_blank', rel: 'noopener' });
+
+      // Заголовок — первая строка/предложение caption
+      const caption = (p.c || '').trim();
+      const title = caption.split(/[\n\.\!]/)[0].slice(0, 80).trim() || labels.tag;
+
+      // Изображение — кликабельное, открывает модал (НЕ перекидывает в Instagram)
+      const imgWrap = el('button', { type: 'button', class: 'post-image', 'aria-label': title });
       // First 6 cards: eager load so user sees preview instantly. Rest: lazy.
       const loadingMode = cardIndex < 6 ? 'eager' : 'lazy';
       cardIndex++;
-      const img = el('img', { loading: loadingMode, alt: p.c || '' });
+      const img = el('img', { loading: loadingMode, alt: title });
       img.src = p.i || '';
       img.onerror = () => {
-        // Replace broken image with placeholder rather than removing (keeps layout stable)
         imgWrap.style.background = '#1a1a1a';
         img.replaceWith(Object.assign(document.createElement('div'),
           { className: 'post-image__fallback', textContent: '📷' }));
       };
       imgWrap.appendChild(img);
+      imgWrap.addEventListener('click', () => openPostInModal(p));
       card.appendChild(imgWrap);
 
       const body = el('div', { class: 'post-body' });
-      body.appendChild(el('div', { class: 'post-tag' },
+
+      // Заголовок — крупный, жирный, чёрный
+      const titleEl = el('h3', { class: 'post-title' }, title);
+      body.appendChild(titleEl);
+
+      // Тег + дата
+      const meta = el('div', { class: 'post-meta' });
+      meta.appendChild(el('span', { class: 'post-tag' },
         lang === 'en' ? (p.te || p.t || 'Post') : (p.t || 'Публикация')
       ));
-      body.appendChild(el('p', { class: 'post-caption' }, p.c || ''));
+      meta.appendChild(el('span', { class: 'post-date' },
+        lang === 'en' ? fmtDateEn(p.d) : fmtDateRu(p.d)
+      ));
+      body.appendChild(meta);
+
+      // Краткое описание — 2 строки clamp
+      const excerpt = el('p', { class: 'post-excerpt' }, caption);
+      body.appendChild(excerpt);
+
+      // Кнопка «Читать полностью»
+      const readMore = el('button', { type: 'button', class: 'post-readmore' }, labels.readMore);
+      readMore.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPostInModal(p);
+      });
+      body.appendChild(readMore);
+
       card.appendChild(body);
       grid.appendChild(card);
     });
+  }
+
+  // Конвертация feed-поста → формат, который ждёт post-modal.js
+  function toModalPost(p) {
+    const tag = p.t || p.te || '';
+    const tagEn = p.te || p.t || '';
+    return {
+      code: p.s || '',
+      url: p.u || '',
+      image: p.i || '',
+      images: p.i ? [p.i] : [],
+      caption: p.c || '',
+      tag: tag,
+      tag_en: tagEn,
+      category: '',
+      date: p.d || '',
+    };
+  }
+
+  function openPostInModal(p) {
+    if (typeof window.openPostModal === 'function') {
+      const modalPost = toModalPost(p);
+      // Берём весь месяц как список, чтобы работали стрелки навигации
+      const all = (MONTH_CACHE[`${view.year}-${String(view.month).padStart(2, '0')}`] || [])
+        .filter((x) => (x.d || '').slice(0, 7) === `${view.year}-${String(view.month).padStart(2, '0')}`)
+        .sort((a, b) => (b.d || '').localeCompare(a.d || ''));
+      const idx = all.findIndex((x) => x.s === p.s);
+      const modalList = (idx >= 0 ? all : [p]).map(toModalPost);
+      window.openPostModal(modalList[idx >= 0 ? idx : 0], modalList, idx >= 0 ? idx : 0);
+      return;
+    }
+    // Fallback если post-modal.js не загружен — открываем оригинал в новой вкладке
+    if (p.u) window.open(p.u, '_blank', 'noopener');
   }
 
   function parseHash() {

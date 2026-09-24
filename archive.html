@@ -107,21 +107,49 @@
     aspect-ratio: 4/5;
     overflow: hidden;
     background: rgba(22, 18, 16, 0.06);
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: block;
+    cursor: pointer;
   }
   .archive-post .post-image img {
     width: 100%; height: 100%;
     object-fit: cover; display: block;
+    transition: transform 240ms ease;
+  }
+  .archive-post .post-image:hover img {
+    transform: scale(1.03);
   }
   .archive-post .post-body {
-    padding: 16px 20px 20px;
+    padding: 14px 18px 18px;
+  }
+  .archive-post .post-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #161210;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .archive-post .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    align-items: center;
+    margin-bottom: 8px;
   }
   .archive-post .post-date {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--color-ink-soft, #6a5e4a);
     font-family: 'Unbounded', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 6px;
   }
   .archive-post .post-tag {
     display: inline-block;
@@ -130,18 +158,38 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 8px;
   }
-  .archive-post .post-caption {
+  .archive-post .post-excerpt {
     font-family: 'PT Serif', serif;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.5;
     color: var(--color-ink, #161210);
-    margin: 0;
+    margin: 0 0 12px 0;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .archive-post .post-readmore {
+    appearance: none;
+    border: 1px solid var(--color-amber, #b8651a);
+    background: transparent;
+    color: var(--color-amber, #b8651a);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease;
+  }
+  .archive-post .post-readmore:hover,
+  .archive-post .post-readmore:focus-visible {
+    background: var(--color-amber, #b8651a);
+    color: #fff;
+    outline: none;
   }
   .archive-post .post-image__fallback {
     width: 100%; height: 100%;
@@ -154,6 +202,14 @@
     content: '📷';
     opacity: 0.4;
   }
+
+  /* Мобильная версия карточки — компактнее */
+  @media (max-width: 640px) {
+    .archive-post .post-image { aspect-ratio: 1/1; max-height: 320px; }
+    .archive-post .post-body { padding: 12px 14px 14px; }
+    .archive-post .post-title { font-size: 15px; margin-bottom: 6px; }
+    .archive-post .post-excerpt { font-size: 13px; margin-bottom: 10px; }
+    .archive-post .post-readmore { padding: 7px 12px; font-size: 11px; }
   }
 
   .archive-empty {
