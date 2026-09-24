@@ -142,8 +142,9 @@
     const posts = await loadMonth(view.year, view.month);
     grid.innerHTML = '';
 
+    const ymPrefix = `${view.year}-${String(view.month).padStart(2, '0')}`;
     const filtered = posts
-      .filter((p) => (p.d || '').slice(0, 7) === `${view.year}-${String(view.month).padStart(2, '0')}`)
+      .filter((p) => (p.d || '').slice(0, 7) === ymPrefix)
       .sort((a, b) => (b.d || '').localeCompare(a.d || ''));
 
     if (filtered.length === 0) {
@@ -152,7 +153,17 @@
       return;
     }
 
+    // Группируем по дню, разделяя заголовком дня
+    let lastDay = null;
     filtered.forEach((p) => {
+      const day = (p.d || '').slice(0, 10);
+      if (day !== lastDay) {
+        const heading = el('div', { class: 'archive-day' },
+          lang === 'en' ? fmtDateEn(day) : fmtDateRu(day)
+        );
+        grid.appendChild(heading);
+        lastDay = day;
+      }
       const card = el('article', { class: 'archive-post' });
       const imgWrap = el('a', { class: 'post-image', href: p.u, target: '_blank', rel: 'noopener' });
       const img = el('img', { loading: 'lazy', alt: p.c || '' });
@@ -162,9 +173,6 @@
       card.appendChild(imgWrap);
 
       const body = el('div', { class: 'post-body' });
-      body.appendChild(el('div', { class: 'post-date' },
-        lang === 'en' ? fmtDateEn(p.d) : fmtDateRu(p.d)
-      ));
       body.appendChild(el('div', { class: 'post-tag' },
         lang === 'en' ? (p.te || p.t || 'Post') : (p.t || 'Публикация')
       ));
@@ -172,6 +180,17 @@
       card.appendChild(body);
       grid.appendChild(card);
     });
+  }
+
+  function parseHash() {
+    const h = (location.hash || '').replace(/^#/, '');
+    const m = h.match(/^(\d{4})-(\d{2})$/);
+    if (m) {
+      view.year = Number(m[1]);
+      view.month = Number(m[2]);
+      return true;
+    }
+    return false;
   }
 
   function updateCrumbs() {
@@ -230,7 +249,12 @@
   }
 
   function init() {
+    parseHash();
     document.addEventListener('langchange', render);
+    window.addEventListener('hashchange', () => {
+      parseHash();
+      render();
+    });
     render();
   }
 

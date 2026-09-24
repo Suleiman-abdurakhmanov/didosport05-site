@@ -1599,3 +1599,115 @@ body.post-modal-open { overflow: hidden; }
 .rsya-slot:empty {
   display: none;
 }
+
+/* Nested archive menu inside mobile drawer */
+.nav-archive {
+  border-left: 3px solid transparent;
+}
+.nav-archive > summary {
+  display: block;
+  padding: 14px 24px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+  transition: color 160ms ease, background 160ms ease;
+}
+.nav-archive > summary::-webkit-details-marker { display: none; }
+.nav-archive > summary::after {
+  content: '›';
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 18px;
+  color: var(--fg-soft);
+  transition: transform 200ms ease;
+}
+.nav-archive[open] > summary {
+  color: var(--accent);
+  background: rgba(184, 101, 26, 0.06);
+  border-left: 3px solid var(--accent);
+  padding-left: 21px;
+}
+.nav-archive[open] > summary::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+.nav-archive__years {
+  padding: 4px 0 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.02);
+}
+.nav-archive__year {
+  border-top: 1px solid rgba(22, 18, 16, 0.06);
+}
+.nav-archive__year > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 24px 10px 32px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  cursor: pointer;
+  list-style: none;
+}
+.nav-archive__year > summary::-webkit-details-marker { display: none; }
+.nav-archive__year > summary::after {
+  content: '+';
+  color: var(--fg-soft);
+  font-size: 18px;
+  line-height: 1;
+}
+.nav-archive__year[open] > summary::after { content: '−'; }
+.nav-archive__year > summary .count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--fg-soft);
+  font-family: var(--font-body);
+}
+.nav-archive__months {
+  padding: 4px 0 8px;
+}
+.nav-archive__months a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 24px 8px 48px;
+  font-size: 13px;
+  color: var(--fg-soft);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+.nav-archive__months a:hover,
+.nav-archive__months a:active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(184, 101, 26, 0.05);
+}
+.nav-archive__months a .mname { font-family: var(--font-display); letter-spacing: 0.02em; }
+.nav-archive__months a .mcount { font-size: 11px; opacity: 0.7; }
+
+/* Day grouping inside archive posts */
+.archive-day {
+  grid-column: 1 / -1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(184, 101, 26, 0.2);
+}
+.archive-day:first-child { margin-top: 0; }
